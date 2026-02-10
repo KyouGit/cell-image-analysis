@@ -1,0 +1,66 @@
+# ──────────────────────────────────────
+# Original company code (kept locally, excluded from git)
+# ──────────────────────────────────────
+u2_utils/
+
+# ──────────────────────────────────────
+# Data & Model weights
+# ──────────────────────────────────────
+data/
+runs/
+outputs/
+*.pth
+*.pt
+!requirements.txt
+
+# ──────────────────────────────────────
+# Python
+# ──────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# ──────────────────────────────────────
+# IDE & OS
+# ──────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ──────────────────────────────────────
+# Jupyter
+# ──────────────────────────────────────
+.ipynb_checkpoints/
+
+# ──────────────────────────────────────
+# Environment
+# ──────────────────────────────────────
+.env
+*.env
+
+# ──────────────────────────────────────
+# Legacy files (root level, replaced by pipeline/)
+# ──────────────────────────────────────
+/main.py
+/example.py
+/prepare_data.py
+/yolo_detect.py
+/yolo_classify.py
+/best_autoencoder.pth
+/results.json
+/umap_visualization.png
+/tsne_visualization.png
+/class_overlap_analysis.png
+/reconstruction.png
+/training_curves.png
+/gitignore
