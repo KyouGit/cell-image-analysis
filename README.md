@@ -21,8 +21,8 @@ label noise 처리 → 모델 개선 → XAI 분석 → 제품 배포까지 end-
 | 초기 모델 | 혼동쌍 클래스 간 경계 모호 | YOLOv5 baseline | Precision 0.68 |
 | 모델 개선 | 아키텍처 한계 | YOLOv8 → YOLOv10 → **YOLOv11s** 비교 실험 | mAP@50 0.879 |
 | Label noise 처리 | Hard case 경계 샘플 오라벨링 | UMAP 잠재 공간에서 경계 샘플 탐지 → 진단검사 전문의 재라벨링 | — |
-| Soft-label 전략 | 형태학적으로 유사한 클래스 | 혼동쌍(BandNeutrophil↔SegNeutrophil 등) soft-label 재정의 | **Precision 0.90** |
-| OOD 필터링 | 블러·이물질 이미지 혼입 | VAE reconstruction error + Laplacian blur 검출 | FP 감소 |
+| Soft-label 전략 | 형태학적으로 유사한 클래스 | YOLO `label_smoothing=0.1` + 혼동쌍 경계 샘플 진단검사 전문의 재라벨링 | **Precision 0.90** |
+| OOD 필터링 | 블러·이물질 이미지 혼입 | VAE (ResidualBlock+UNet) reconstruction error 3σ threshold — [`vae_ood.py`](experiments/training/vae_ood.py) | FP 감소 |
 
 **혼동쌍 (주요 hard case):**
 - WBC: BandNeutrophil ↔ SegNeutrophil, Myelocyte ↔ Blast, Monocyte ↔ Lymphocyte
@@ -162,6 +162,61 @@ python pipeline/yolo_detect.py --mode all
 
 # Step 3: AutoEncoder training + UMAP/t-SNE visualization
 python pipeline/main.py
+```
+
+---
+
+## Demos
+
+### Local Detection Demo
+
+학습된 모델이 있으면 즉시 실행 가능합니다 (서버 불필요).
+
+```bash
+# 랜덤 샘플 이미지로 탐지 결과 시각화
+python examples/demo.py
+
+# 특정 이미지 지정
+python examples/demo.py --image path/to/blood_smear.jpg --save result.jpg
+```
+
+**API response 형식 (production /inf 엔드포인트와 동일):**
+
+```json
+{
+  "result_code": "OK",
+  "result": [
+    { "class": "WBC",      "x1": 142, "y1": 87,  "x2": 201, "y2": 146, "prob": 0.934 },
+    { "class": "RBC",      "x1": 220, "y1": 110, "x2": 257, "y2": 148, "prob": 0.891 },
+    { "class": "Platelet", "x1": 305, "y1": 198, "x2": 326, "y2": 220, "prob": 0.762 }
+  ]
+}
+```
+
+### API Client Demo (Production Server)
+
+FastAPI 추론 서버가 실행 중일 때 사용합니다.
+
+```bash
+# 로컬 서버 기동
+cd production_reference/inference_server
+uvicorn main:app --host 0.0.0.0 --port 8000
+
+# 이미지 전송 및 결과 시각화
+python examples/api_client.py --image path/to/image.jpg --server http://localhost:8000
+
+# JSON 결과만 출력
+python examples/api_client.py --image path/to/image.jpg --json
+```
+
+```
+[>] POST http://localhost:8000/inf  (image: 640x480)
+[✓] 탐지 완료 — 427개
+    BandNeutrophil      : 12
+    Lymphocyte          : 8
+    RBC                 : 389
+    Schistocyte         : 7
+    SegNeutrophil       : 11
 ```
 
 ---
