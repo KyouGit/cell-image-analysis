@@ -97,6 +97,17 @@ YOLO FPN feature가 아닌 Supervised Contrastive Learning(SupCon) 기반 표현
 
 ---
 
+## Production UI
+
+실제 운영 중인 U2PBS 서비스 화면 (환자 정보 비식별화).  
+25개 혈구 클래스별 탐지 결과, 개수·비중·신뢰도, 세포 이미지 그리드를 제공합니다.
+
+<p align="center">
+  <img src="assets/U2PBS_demo.png" width="90%" alt="U2PBS Production UI"/>
+</p>
+
+---
+
 ## Results
 
 ### Production Performance (U2Bio, 25-class)
@@ -261,9 +272,50 @@ cell-image-analysis/
 | **Label Strategy** | Hard label | Soft-label (혼동쌍 재정의) |
 | **OOD Filter** | None | VAE reconstruction + Laplacian blur |
 | **XAI** | None | EigenCAM + D-RISE |
-| **Serving** | Local script | FastAPI + Docker + AWS EC2 |
+| **Serving** | Local script | FastAPI + Docker (자체 GPU 서버) |
 | **GPU** | Single GPU | Dual NVIDIA A100 |
 | **Inference** | Sequential | ThreadPoolExecutor (8 workers) |
+
+---
+
+## Production Deployment
+
+### 서버 구성
+
+```
+Client (병원 프론트엔드)
+    │  HTTP POST /inf  (base64 이미지 + 모델명)
+    ▼
+FastAPI (uvicorn)  ─── Docker 컨테이너
+    │
+    ├─ u2_utils.inf_v10()
+    │     ├─ 이미지 저장 (uuid 파일명)
+    │     ├─ YOLOv11s .pt 로드 & 추론
+    │     ├─ 신뢰도 필터링 (클래스별 threshold)
+    │     └─ JSON 결과 반환
+    │
+    └─ ThreadPoolExecutor (병렬 요청 처리)
+
+Hardware: 자체 GPU 서버 (Dual NVIDIA A100)
+DB: MariaDB (탐지 결과 로깅)
+Auth: JWT 토큰 검증 (외부 인증 서버 연동)
+```
+
+### 배포 이력
+
+| 버전 | 프레임워크 | 모델 | 비고 |
+|------|-----------|------|------|
+| v1 | Flask | YOLOv5 (3-class) | 초기 프로토타입 |
+| v2 | Flask | YOLOv8 (25-class) | 클래스 확장 |
+| v3 | FastAPI + Docker | YOLOv10 | 컨테이너화 |
+| **v4 (현재)** | **FastAPI + Docker** | **YOLOv11s (25-class)** | **label noise 처리 + Ensemble** |
+
+### 주요 엔드포인트
+
+```python
+GET  /get_models   # 사용 가능한 모델 목록
+POST /inf          # 이미지 추론 (base64 → JSON)
+```
 
 ---
 
@@ -274,8 +326,7 @@ cell-image-analysis/
 - **Label Noise**: Soft-label strategy, UMAP-based boundary sample detection
 - **XAI**: EigenCAM (FPN layer), D-RISE (perturbation-based saliency)
 - **Visualization**: UMAP, t-SNE, matplotlib, seaborn
-- **Production**: FastAPI, uvicorn, Docker, AWS EC2, MariaDB, JWT
-- **Export**: ONNX (YOLOv11s best.onnx)
+- **Production**: FastAPI, uvicorn, Docker, MariaDB, JWT 인증
 - **Training**: CosineAnnealingLR, AdamW, W&B experiment tracking
 
 ---
