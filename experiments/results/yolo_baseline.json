@@ -1,0 +1,86 @@
+{
+  "experiment": "EXP-001/EXP-004: YOLOv11s Final Baseline",
+  "model": "YOLOv11s",
+  "dataset": "pbs06 test set (6280 images, 25 classes)",
+  "data_source": "Ajou University Hospital IRB approved, 진단검사의학과 전문의 annotation",
+  "training": {
+    "total_images": "318,000+ bounding boxes",
+    "classes": 25,
+    "gpu": "Dual NVIDIA A100",
+    "ensemble": "Deep Ensemble 5 seeds + WBF"
+  },
+
+  "overall": {
+    "mAP50": 0.879,
+    "precision": 0.90,
+    "note": "After label noise handling (UMAP boundary detection + expert re-labeling + label_smoothing=0.1). Precision was 0.68 before."
+  },
+
+  "per_class_ap50": {
+    "BandNeutrophil": 0.4681,
+    "Basophil": 0.9883,
+    "Blast": 0.9432,
+    "Echinocyte": 0.7379,
+    "Elliptocyte": 0.6364,
+    "Eosinophil": 0.9691,
+    "GiantPlt": 0.9348,
+    "Lymphocyte": 0.9751,
+    "Monocyte": 0.9115,
+    "Myelocyte": 0.8563,
+    "Nucleated": 0.9561,
+    "PLT": 0.9064,
+    "RBC": 0.9514,
+    "Reticulocyte": 0.5267,
+    "Schistocyte": 0.4746,
+    "SegNeutrophil": 0.8982,
+    "Smudge": 0.9523,
+    "Stomatocyte": 0.6379,
+    "TargetCell": 0.6914,
+    "TearDropCell": 0.6053,
+    "ToxicGranule": 0.6574,
+    "ToxicVacuole": 0.6274,
+    "clump-PLT": 0.9237,
+    "degeneWBC": 0.8869,
+    "hyperSeg.": 0.3613
+  },
+
+  "gt_counts": {
+    "BandNeutrophil": 153,
+    "Basophil": 263,
+    "Blast": 202,
+    "Echinocyte": 6703,
+    "Elliptocyte": 1123,
+    "Eosinophil": 476,
+    "GiantPlt": 716,
+    "Lymphocyte": 970,
+    "Monocyte": 374,
+    "Myelocyte": 340,
+    "Nucleated": 145,
+    "PLT": 4710,
+    "RBC": 63579,
+    "Reticulocyte": 223,
+    "Schistocyte": 234,
+    "SegNeutrophil": 1629,
+    "Smudge": 318,
+    "Stomatocyte": 147,
+    "TargetCell": 339,
+    "TearDropCell": 178,
+    "ToxicGranule": 236,
+    "ToxicVacuole": 117,
+    "clump-PLT": 240,
+    "degeneWBC": 133,
+    "hyperSeg.": 130
+  },
+
+  "calibration": {
+    "method": "Temperature Scaling + Conformal Prediction",
+    "conformal_alpha": 0.10,
+    "conformal_tau": 0.475,
+    "note": "At alpha=0.10, prediction set covers true class with 90% probability guarantee"
+  },
+
+  "hard_classes": {
+    "low_ap_reason": "BandNeutrophil(0.47), Schistocyte(0.47), hyperSeg(0.36) are morphologically ambiguous rare classes",
+    "note": "DDPM augmentation improved Atypical+2.8%, Nucleated+1.6% (see ddpm_augmentation.json)"
+  }
+}

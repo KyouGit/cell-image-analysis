@@ -1,0 +1,49 @@
+{
+  "experiment": "EXP-L2: SupCon vs YOLO FPN Representation Analysis",
+  "model": "ResNet50 + Supervised Contrastive Loss (SupCon_HN_s42)",
+  "checkpoint": "EXP-L4_Analysis/SupCon_HN_s42/best.pt",
+  "val_set": "pbs06/val (n=2500, 25 classes)",
+
+  "linear_probe": {
+    "classifier": "LogisticRegression (C=1.0, lbfgs, max_iter=2000)",
+    "val_accuracy": 0.912,
+    "n_samples": 2500,
+    "n_classes": 25
+  },
+
+  "representation_quality": {
+    "silhouette_score": {
+      "yolo_fpn": 0.112,
+      "supcon": 0.500,
+      "improvement": "4.46x"
+    },
+    "confusion_pair_cosine_distance": {
+      "yolo_fpn_baseline": 1.0,
+      "supcon": 44.5,
+      "improvement": "44.5x"
+    }
+  },
+
+  "confusion_pairs_analyzed": [
+    "BandNeutrophil vs SegNeutrophil",
+    "Myelocyte vs Blast",
+    "Monocyte vs Lymphocyte",
+    "TargetCell vs RBC",
+    "Schistocyte vs RBC",
+    "Echinocyte vs RBC",
+    "GiantPlt vs PLT",
+    "clump-PLT vs PLT",
+    "ToxicGranule vs SegNeutrophil",
+    "TearDropCell vs RBC",
+    "Elliptocyte vs RBC"
+  ],
+
+  "result_images": {
+    "confusion_pair_distances": "assets/representation/confusion_pair_distances_corrected.png",
+    "linear_probe_cm": "assets/representation/linear_probe_confusion_matrix.png",
+    "seed_reproducibility": "assets/representation/seed_reproducibility.png",
+    "supcon_ablation": "assets/representation/supcon_ablation.png"
+  },
+
+  "conclusion": "SupCon feature space separates confusion pairs 44.5x better than YOLO FPN. Linear probe achieves 91.2% accuracy — strong representation quality. However, using SupCon as a detector replacement (two-stage) degrades mAP from 0.779 to 0.041 (see twostage_reclassification.json). SupCon is a representation analysis tool, not a detection replacement."
+}
