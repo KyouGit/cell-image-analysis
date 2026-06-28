@@ -1,0 +1,32 @@
+{
+  "map50_baseline": 0.8794,
+  "map50_aug1000": 0.8821,
+  "map50_tc2000": 0.8827,
+  "per_class": {
+    "Neutrophil":       {"baseline": 0.6759, "aug_1000": 0.6875, "tc2000": 0.6809},
+    "Lymphocyte":       {"baseline": 0.9940, "aug_1000": 0.9940, "tc2000": 0.9945},
+    "Monocyte":         {"baseline": 0.9816, "aug_1000": 0.9801, "tc2000": 0.9798},
+    "Eosinophil":       {"baseline": 0.8651, "aug_1000": 0.8683, "tc2000": 0.8650},
+    "Basophil":         {"baseline": 0.8143, "aug_1000": 0.8095, "tc2000": 0.8139},
+    "BandNeutrophil":   {"baseline": 0.9932, "aug_1000": 0.9930, "tc2000": 0.9937},
+    "SegNeutrophil":    {"baseline": 0.9737, "aug_1000": 0.9773, "tc2000": 0.9788},
+    "hyperSeg":         {"baseline": 0.9871, "aug_1000": 0.9885, "tc2000": 0.9890},
+    "NormalRBC":        {"baseline": 0.9667, "aug_1000": 0.9619, "tc2000": 0.9682},
+    "Microcyte":        {"baseline": 0.9359, "aug_1000": 0.9272, "tc2000": 0.9320},
+    "Macrocyte":        {"baseline": 0.9728, "aug_1000": 0.9804, "tc2000": 0.9873},
+    "Hypochromia":      {"baseline": 0.9538, "aug_1000": 0.9581, "tc2000": 0.9559},
+    "Schistocyte":      {"baseline": 0.9768, "aug_1000": 0.9769, "tc2000": 0.9768},
+    "Spherocyte":       {"baseline": 0.6513, "aug_1000": 0.6674, "tc2000": 0.6626},
+    "TargetCell":       {"baseline": 0.6590, "aug_1000": 0.6654, "tc2000": 0.6433},
+    "Stomatocyte":      {"baseline": 0.9511, "aug_1000": 0.9487, "tc2000": 0.9506},
+    "Acanthocyte":      {"baseline": 0.9800, "aug_1000": 0.9854, "tc2000": 0.9781},
+    "Echinocyte":       {"baseline": 0.8261, "aug_1000": 0.8176, "tc2000": 0.8400},
+    "Nucleated":        {"baseline": 0.8680, "aug_1000": 0.8837, "tc2000": 0.8940},
+    "Blast":            {"baseline": 0.7765, "aug_1000": 0.7774, "tc2000": 0.7807},
+    "Prolymphocyte":    {"baseline": 0.7971, "aug_1000": 0.7958, "tc2000": 0.7982},
+    "Atypical":         {"baseline": 0.7594, "aug_1000": 0.7874, "tc2000": 0.7766},
+    "Platelet":         {"baseline": 0.9542, "aug_1000": 0.9632, "tc2000": 0.9594},
+    "GiantPlt":         {"baseline": 0.9710, "aug_1000": 0.9654, "tc2000": 0.9588},
+    "Thrombocytopenia": {"baseline": 0.7001, "aug_1000": 0.6920, "tc2000": 0.7090}
+  }
+}
